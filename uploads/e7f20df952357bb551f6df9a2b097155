@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Matches</title>
+	<style>
+	* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+.match-card {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 12px;
+}
+
+.category-info img {
+    width: 16px;
+    height: 16px;
+}
+
+.league-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    color: #666;
+    font-size: 14px;
+}
+
+.league-info img {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+}
+
+.match-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.teams {
+    font-weight: bold;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.team-name {
+    display: block;
+    line-height: 1.2;
+}
+
+.odds {
+    background: #f0f0f0;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 14px;
+    color: #444;
+}
+
+.time {
+    color: #888;
+    font-size: 14px;
+    margin-left: auto;
+}
+
+.add-bet {
+    background: #e0e0e0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #444;
+    text-decoration: none;
+}
+
+.separator {
+    color: #999;
+    margin: 0 5px;
+}
+	</style>
+</head>
+<body>
+    <div class="match-card">
+        <div class="category-info">
+            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'><circle cx='12' cy='12' r='10'/></svg>" alt="Sport">
+            <span>Football</span>
+            <span class="separator">•</span>
+            <span>International</span>
+            <span class="separator">•</span>
+            <span>IND Super League</span>
+            <span class="time">Today-7:30 PM</span>
+        </div>
+        <div class="match-info">
+            <div class="teams">
+                <span class="team-name">Mumbai City FC</span>
+                <span class="team-name">Northeast United FC</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="odds">U/O 4.5</div>
+                <div class="odds">OVER ( 4.25 )</div>
+                <a href="#" class="add-bet">+</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="match-card">
+        <div class="category-info">
+            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'><circle cx='12' cy='12' r='10'/></svg>" alt="Sport">
+            <span>Football</span>
+            <span class="separator">•</span>
+            <span>England</span>
+            <span class="separator">•</span>
+            <span>Premier League</span>
+            <span class="time">Today-8:00 PM</span>
+        </div>
+        <div class="match-info">
+            <div class="teams">
+                <span class="team-name">Arsenal</span>
+                <span class="team-name">Manchester City</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="odds">1X2</div>
+                <div class="odds">2 ( 2.10 )</div>
+                <a href="#" class="add-bet">+</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="match-card">
+        <div class="category-info">
+            <img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'><circle cx='12' cy='12' r='10'/></svg>" alt="Sport">
+            <span>Football</span>
+            <span class="separator">•</span>
+            <span>Spain</span>
+            <span class="separator">•</span>
+            <span>La Liga</span>
+            <span class="time">Today-9:30 PM</span>
+        </div>
+        <div class="match-info">
+            <div class="teams">
+                <span class="team-name">Barcelona</span>
+                <span class="team-name">Real Madrid</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="odds">1X2</div>
+                <div class="odds">1 ( 1.95 )</div>
+                <a href="#" class="add-bet">+</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
