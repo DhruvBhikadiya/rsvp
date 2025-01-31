@@ -4,7 +4,7 @@ const { uploadFile , deleteFile , listFolders , getFilesByPath } = require("../c
 const { auth } = require('../middlewares/auth.js');
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
+const upload = multer();
 
 router.post("/upload", upload.single("file"),auth, uploadFile);
 router.delete('/deleteFile/:fileId',auth , deleteFile);
