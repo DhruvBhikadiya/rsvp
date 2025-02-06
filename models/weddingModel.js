@@ -2,9 +2,9 @@ const db = require('../config/db');
 
 const wedding = {
   create: async (data) => {
-    const sql = 'INSERT INTO wedding (brideName, groomName, brideImage, brideImageId,groomImage,groomImageId,weddingCardUrl,itenaryUrl,preweddingUrl,weddingLogo,weddingLogoId, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
+    const sql = 'INSERT INTO wedding (brideName, groomName, brideImage, brideImageId,groomImage,groomImageId,weddingCardUrl,itenaryUrl,weddingCardId,itenaryId,prewedding,weddingLogo,weddingLogoId, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())';
     try {
-      const [results] = await db.execute(sql, [data.brideName, data.groomName, data.brideImage, data.brideImageId, data.groomImage, data.groomImageId, data.weddingCardUrl, data.itenaryUrl, data.preweddingUrl, data.weddingLogo, data.weddingLogoId]);
+      const [results] = await db.execute(sql, [data.brideName, data.groomName, data.brideImage, data.brideImageId, data.groomImage, data.groomImageId, data.weddingCardUrl, data.itenaryUrl, data.weddingCardId, data.itenaryId, JSON.stringify(data.prewedding), data.weddingLogo, data.weddingLogoId]);
       
       let dataJSON = {
         status: 'success',
@@ -22,6 +22,10 @@ const wedding = {
       const [results] = await db.execute(`
         SELECT * FROM wedding ORDER BY wedding.created_at DESC
       `);
+
+      results.forEach(e => {
+        e.prewedding = JSON.parse(e.prewedding);
+      })
       
       let dataJSON = {
         status: 'success',
@@ -40,6 +44,10 @@ const wedding = {
         SELECT * FROM wedding WHERE id = ? ORDER BY wedding.created_at DESC
       `, [id]);
       
+      results.forEach(e => {
+        e.prewedding = JSON.parse(e.prewedding);
+      })
+
       let dataJSON = {
         status: 'success',
         data: results
@@ -74,6 +82,10 @@ const wedding = {
       const [totalCountResults] = await db.execute('SELECT COUNT(*) AS totalCount FROM wedding');
       const totalCount = totalCountResults[0].totalCount;
   
+      results.forEach(e => {
+        e.prewedding = JSON.parse(e.prewedding);
+      })
+
       return {
         status: 'success',
         data: results,
@@ -86,9 +98,9 @@ const wedding = {
 
 
   update: async (id, data) => {
-    const sql = 'UPDATE wedding SET brideName = ?, groomName = ?, brideImage = ?, brideImageId = ?, groomImage = ?, groomImageId = ?, weddingCardUrl = ?, itenaryUrl = ?, preweddingUrl = ?, weddingLogo = ?, weddingLogoId = ?, updated_at = NOW() WHERE pageId = ?';
+    const sql = 'UPDATE wedding SET brideName = ?, groomName = ?, brideImage = ?, brideImageId = ?, groomImage = ?, groomImageId = ?, weddingCardUrl = ?, itenaryUrl = ?, weddingCardId = ?, itenaryId = ?, prewedding = ?, weddingLogo = ?, weddingLogoId = ?, updated_at = NOW() WHERE id = ?';
     try {
-      const [results] = await db.execute(sql, [data.brideName, data.groomName, data.brideImage, data.brideImageId, data.groomImage, data.groomImageId, data.weddingCardUrl, data.itenaryUrl, data.preweddingUrl, data.weddingLogo, data.weddingLogoId, id]);
+      const [results] = await db.execute(sql, [data.brideName, data.groomName, data.brideImage, data.brideImageId, data.groomImage, data.groomImageId, data.weddingCardUrl, data.itenaryUrl, data.weddingCardId, data.itenaryId, JSON.stringify(data.prewedding), data.weddingLogo, data.weddingLogoId, id]);
       
       let dataJson = {
         status: 'success',
@@ -102,7 +114,7 @@ const wedding = {
 
   delete: async (id) => {
     try {
-      const [results] = await db.execute('DELETE FROM wedding WHERE pageId = ?', [id]);
+      const [results] = await db.execute('DELETE FROM wedding WHERE id = ?', [id]);
       
       return results;
     } catch (err) {

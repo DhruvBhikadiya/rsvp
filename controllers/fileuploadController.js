@@ -1,11 +1,15 @@
 const db = require('../config/db');
 const ftp = require("basic-ftp");
+const streamifier = require('streamifier'); 
 const fs = require("fs");
 const FileModel = require("../models/fileuploadModel");
 const Files = require("../models/filesModel");
 const config = require("../config/config");
 
 async function uploadFile(req, res) {
+    console.log('req.body ---->', req.body);
+
+    // Check if the file is properly uploaded and req.body.dirName exists
     if (!req.file || !req.body.dirName) {
         return res.status(400).json({ message: "No file or directory name provided" });
     }
@@ -13,10 +17,9 @@ async function uploadFile(req, res) {
     const client = new ftp.Client();
     client.ftp.verbose = true;
 
-    const localPath = req.file.path;
     const directoryName = req.body.dirName;
     const remoteDir = `${config.uploadDir}${directoryName}/`;
-    const remotePath = `${remoteDir}${req.file.filename}`;
+    const remotePath = `${remoteDir}${req.file.originalname}`;
 
     try {
         await client.access({
@@ -28,24 +31,29 @@ async function uploadFile(req, res) {
 
         await client.ensureDir(remoteDir);
 
-        await client.uploadFrom(localPath, remotePath);
+        // Create a readable stream from the buffer
+        const fileStream = streamifier.createReadStream(req.file.buffer);
 
-        const fileUrl = `https://${config.ftp.baseURL}/${directoryName}/${req.file.filename}`;
-        const fileDetails = new FileModel(req.file.filename, req.file.mimetype, fileUrl);
+        // Upload the file directly from the readable stream to the FTP server
+        await client.uploadFrom(fileStream, remotePath);
+
+        const fileUrl = `https://${config.ftp.baseURL}/${directoryName}/${req.file.originalname}`;
+        const fileDetails = new FileModel(req.file.originalname, req.file.mimetype, fileUrl);
 
         const result = await Files.createFormUpload({ url: fileUrl, directory: directoryName }, req.userDetails);
-
-        fs.unlinkSync(localPath);
 
         res.status(200).json({ message: "File uploaded successfully", file: fileDetails, dbRecord: result });
 
     } catch (err) {
         console.error("FTP Upload Error:", err);
-        res.status(500).json({ message: "FTP Upload Failed", error: err.message }); 
+        res.status(500).json({ message: "FTP Upload Failed", error: err.message });
     } finally {
         client.close();
     }
 }
+
+
+
 async function deleteFile(req, res) {
     const { fileId } = req.params;
 
