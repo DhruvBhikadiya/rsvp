@@ -1,10 +1,10 @@
 module.exports = {
     ftp: {
-        baseURL: "asset.aidges.com",
-        host: "82.197.80.49",
-        user: "u739277164.asset.aidges.com",
+        baseURL: "wedding.eventfactoryindia.com",
+        host: "145.223.17.92",
+        user: "u973802458.wedding.eventfactoryindia.com",
         password: "Vraj@1011",
         secure: false
     },
-    uploadDir: "/public_html/"
+    uploadDir: "/public_html/uploads/"
 };

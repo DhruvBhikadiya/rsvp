@@ -6,6 +6,7 @@ const FileModel = require("../models/fileuploadModel");
 const Files = require("../models/filesModel");
 const config = require("../config/config");
 
+
 async function uploadFile(req, res) {
     console.log('req.body ---->', req.body);
 
@@ -18,8 +19,11 @@ async function uploadFile(req, res) {
     client.ftp.verbose = true;
 
     const directoryName = req.body.dirName;
+    const timestamp = Date.now(); // Get current timestamp
+    const fileExtension = req.file.originalname.split('.').pop(); // Get file extension
+    const fileName = `${timestamp}.${fileExtension}`; // Create timestamp-based filename
     const remoteDir = `${config.uploadDir}${directoryName}/`;
-    const remotePath = `${remoteDir}${req.file.originalname}`;
+    const remotePath = `${remoteDir}${fileName}`;
 
     try {
         await client.access({
@@ -37,22 +41,27 @@ async function uploadFile(req, res) {
         // Upload the file directly from the readable stream to the FTP server
         await client.uploadFrom(fileStream, remotePath);
 
-        const fileUrl = `https://${config.ftp.baseURL}/${directoryName}/${req.file.originalname}`;
-        const fileDetails = new FileModel(req.file.originalname, req.file.mimetype, fileUrl);
+        const fileUrl = `https://${config.ftp.baseURL}/uploads/${directoryName}/${fileName}`;
+        const fileDetails = new FileModel(fileName, req.file.mimetype, fileUrl);
 
         const result = await Files.createFormUpload({ url: fileUrl, directory: directoryName }, req.userDetails);
 
-        res.status(200).json({ message: "File uploaded successfully", file: fileDetails, dbRecord: result });
+        res.status(200).json({ 
+            message: "File uploaded successfully", 
+            file: fileDetails, 
+            dbRecord: result 
+        });
 
     } catch (err) {
         console.error("FTP Upload Error:", err);
-        res.status(500).json({ message: "FTP Upload Failed", error: err.message });
+        res.status(500).json({ 
+            message: "FTP Upload Failed", 
+            error: err.message 
+        });
     } finally {
         client.close();
     }
 }
-
-
 
 async function deleteFile(req, res) {
     const { fileId } = req.params;
@@ -72,7 +81,7 @@ async function deleteFile(req, res) {
         }
 
         const image = imageDetails[0];
-        const remotePath = image.url.replace(`https://${config.ftp.baseURL}/`, '');
+        const remotePath = image.url.replace(`https://${config.ftp.baseURL}/uploads/`, '');
 
         await client.access({
             host: config.ftp.host,
@@ -96,7 +105,7 @@ async function deleteFile(req, res) {
 
 async function listFoldersAtPath(client, directoryPath) {
     try {
-       
+        directoryPath = 'uploads/'+directoryPath;
         const fileList = await client.list(directoryPath);
 
        
